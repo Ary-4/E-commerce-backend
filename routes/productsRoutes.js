@@ -14,7 +14,7 @@ const { admin } = require('../middleware/adminMiddleware');
 
 const router = express.Router();
 
-// Input validation middleware
+
 const validateProduct = [
   body('name').notEmpty().withMessage('Name is required'),
   body('price').isNumeric().withMessage('Price must be a number'),
@@ -25,11 +25,11 @@ const validateProduct = [
   }
 ];
 
-// Public routes
+
 router.get('/', getProducts);
 router.get('/:id', getProductById);
 
-// Protected routes (Admin only)
+
 router.post('/', protect, admin, validateProduct, createProduct);
 router.put('/:id', protect, admin, validateProduct, updateProduct);
 router.delete('/:id', protect, admin, deleteProduct);

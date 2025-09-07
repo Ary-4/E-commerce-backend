@@ -1,8 +1,8 @@
 const Order = require('../models/Order');
 const Cart = require('../models/Cart');
 
-// CREATE order (checkout)
-exports.createOrder = async (req, res) => {
+
+const createOrder = async (req, res) => {               //order checkout
   try {
     const cart = await Cart.findOne({ userId: req.user.id }).populate('products.productId');
     if (!cart || cart.products.length === 0) {
@@ -20,8 +20,8 @@ exports.createOrder = async (req, res) => {
       totalPrice
     });
 
-    // empty cart after checkout
-    cart.products = [];
+    
+    cart.products = [];                               // empty cart after checkout
     await cart.save();
 
     res.status(201).json(order);
@@ -30,8 +30,8 @@ exports.createOrder = async (req, res) => {
   }
 };
 
-// GET user's orders
-exports.getUserOrders = async (req, res) => {
+
+const getUserOrders = async (req, res) => {           // get orders
   try {
     const orders = await Order.find({ userId: req.user.id }).populate('products.productId');
     res.json(orders);
@@ -40,8 +40,8 @@ exports.getUserOrders = async (req, res) => {
   }
 };
 
-// GET all orders (admin)
-exports.getAllOrders = async (req, res) => {
+
+const getAllOrders = async (req, res) => {        // all orders by admin
   try {
     const orders = await Order.find().populate('products.productId');
     res.json(orders);
@@ -50,8 +50,8 @@ exports.getAllOrders = async (req, res) => {
   }
 };
 
-// UPDATE order status (admin)
-exports.updateOrderStatus = async (req, res) => {
+
+const updateOrderStatus = async (req, res) => {        // updating order status by admin
   try {
     const { status } = req.body;
     const order = await Order.findById(req.params.id);
@@ -63,4 +63,12 @@ exports.updateOrderStatus = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
+};
+
+
+module.exports = {
+  createOrder,
+  getUserOrders,
+  getAllOrders,
+  updateOrderStatus
 };
